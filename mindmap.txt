@@ -1,0 +1,38 @@
+Web programming
+ - Programming
+   - Language
+     - PHP, Python, JAVA, C#, ...
+   - Architecture
+     - OOP, MVC
+   - Tools
+     - VCS (Version Control Systems)
+       - SVN, git
+     - IDE (Integrated Development Enviroment)
+       - vim, sublime, ...
+   - OS
+     - Linux
+       - bash
+ - Web
+   - pages
+     - html
+   - protocol
+     - http
+       - request(client)
+         - uri(adress)
+           - URL, URN, filename
+         - method
+           - GET/POST/PUT/.../
+         - headers
+         - body
+       - response(server)
+         - status code
+         - headers
+         - body
+   - servers
+     - apache, nginx, uwsgi
+   - Applications
+     - Databases
+       - SQL
+         - MySQL
+     - framework
+       - Django
