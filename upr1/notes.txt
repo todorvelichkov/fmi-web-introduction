@@ -1,7 +1,8 @@
 Introduction to Web Development with Python and Django
 
-Web
+HTTP
 ============
+  # resources: https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
 
   HTTP protocol - Hypertext Transfer Protocol
     - build on top ot TCP (Transmission Control Protocol)
@@ -38,8 +39,6 @@ Web
       {}
 
     - methods - GET/POST/PUT/PATCH/DELETE../HEAD/OPTIONS/..
-    - safe methods: GET/HEAD/OPTIONS and TRACE
-    - idempotent methods: PUT/DELETE
 
     HTTP Response
     - status line (version, status code, status message)
@@ -75,6 +74,8 @@ Web
     
 Programing
 ============
+  resources: https://en.wikipedia.org/wiki/Python_(programming_language)
+  resources: http://www.diveintopython3.net/
 
   Python
   - interpreted (no compiling)
@@ -107,10 +108,6 @@ Programing
     - set
     - dictionaries
 
-    arithmetic operators: +, -, *, /, and ** (exponentiation), % (modulo), // integer division, 
-    logical operators: and, or, and not.
-    relational operators: <, >, ==, !=, <=, >=
-
   ordered vs unordered
     - ordered: list, string, tuple
     - unordered: set, dictionaries
@@ -119,81 +116,24 @@ Programing
     - immutable: int, float, bool, str, tuple, unicode
     - mutable: list, set, dict
 
-  - list
-    append              l.append(item)              Adds a new item to the end of a list
-    insert              l.insert(i, item)           Inserts an item at the ith position in a list
-    pop                 l.pop()                     Removes and returns the last item in a list
-    pop                 l.pop(i)                    Removes and returns the ith item in a list
-    sort                l.sort()                    Modifies a list to be sorted
-    reverse             l.reverse()                 Modifies a list to be in reverse order
-    del                 del l[i]                    Deletes the item in the ith position
-    index               l.index(item)               Returns the index of the first occurrence of item
-    count               l.count(item)               Returns the number of occurrences of item
-    remove              l.remove(item)              Removes the first occurrence of item
+  arithmetic operators: +, -, *, /, and ** (exponentiation), % (modulo), // integer division, 
+  logical operators: and, or, and not.
+  relational operators: <, >, ==, !=, <=, >=, is
 
-  - string
-    count       s.count(item)     Returns the number of occurrences of item in the string
-    lower       s.lower()         Returns a string in all lowercase
-    find        s.find(item)      Returns the index of the first occurrence of item
-    split       s.split(schar)    Splits a string into substrings at schar
+  - control structure
+    - while
+    - for
+    - Exception handling
+    - defining functions
+      - def funcname(*args, **kwargs)
+    - defining class
+      - class classname(parents)
+    
 
-
-Web Programming
+Web Programming Tools
 ============
-
-
-
-Python
-============
-
-
-Django
-============
-
-
-https://defn.io/2018/02/25/web-app-from-scratch-01/
-
-
-
-
-
-
-# old
-# Web programming
-#  - Programming
-#    - Language
-#      - PHP, Python, JAVA, C#, ...
-#    - Architecture
-#      - OOP, MVC
-#    - Tools
-#      - VCS (Version Control Systems)
-#        - SVN, git
-#      - IDE (Integrated Development Enviroment)
-#        - vim, sublime, ...
-#    - OS
-#      - Linux
-#        - bash
-#  - Web
-#    - pages
-#      - html
-#    - protocol
-#      - http
-#        - request(client)
-#          - uri(adress)
-#            - URL, URN, filename
-#          - method
-#            - GET/POST/PUT/.../
-#          - headers
-#          - body
-#        - response(server)
-#          - status code
-#          - headers
-#          - body
-#    - servers
-#      - apache, nginx, uwsgi
-#    - Applications
-#      - Databases
-#        - SQL
-#          - MySQL
-#      - framework
-#        - Django
+  - Web servers: Apache, nginx, uWSGI, ...
+  - Language: PHP, Python, Ruby, JAVA, C#, ...
+  - Databases: MySQL, PostgreSQL, SQLite, MongoDb, ... 
+  - Version Control Systems: Git, SVN, Mercurial, ...
+  - Frameworks: ASP.NET, Ruby on Rails, Django, Lavarel, Spring, ...
