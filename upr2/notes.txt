@@ -1,0 +1,681 @@
+Python
+========
+
+- Python object interning
+    
+    >>> a = 10
+    >>> b = 10
+    >>> c = 10
+    >>> id(a), id(b), id(c)
+    (140621897573616, 140621897573616, 140621897573616)
+    >>> a += 1
+    >>> id(a)
+    140621897573592
+
+    >>> x = 500
+    >>> y = 500
+    >>> id(x)
+    4338740848
+    >>> id(y)
+    4338741040
+
+    >>> s1 = 'hello'
+    >>> s2 = 'hello'
+    >>> id(s1), id(s2)
+    (4454725888, 4454725888)
+    >>> s1 == s2
+    True
+    >>> s1 is s2
+    True
+    >>> s3 = 'hello, world!'
+    >>> s4 = 'hello, world!'
+    >>> id(s3), id(s4)
+    (4454721608, 4454721664)
+    >>> s3 == s4
+    True
+    >>> s3 is s4
+    False
+
+
+- Колекции от данни:
+
+    list (a.k.a. array, масив): подредена последователност от стойности
+
+        cute_animals = ['cat', 'raccoon', 'raccoon', 'panda', 'red panda', 'marmot']
+
+        # методи:
+        cute_animals.index('raccoon') # 1 (Индекса на първото срещане на elementa)
+        cute_animals.index('batman') # или raise-ва: ValueError: 'batman' is not in list
+        cute_animals.count('raccoon') # 2 (Броят срещания на element в списъка)
+        len(cute_animals) # 6 (Нямаме метод за дължина, използваме build-in len)
+        cute_animals.append('monkey') # Връща None! Но, Добавя element в края на списъка
+        cute_animals.extend(['lion', 'tigar']) # Добавя елементите на elements в списък
+                                               # аналогично на: cute_animals += ['lion', 'tigar']
+        cute_animals.sort() # Връща None! Но, сортита списъка
+        cute_animals # ['cat', 'lion', 'marmot', 'monkey', 'panda', 'raccoon', 'raccoon', 'red panda', 'tigar']
+
+        Забележка: Използвайте sorted(cute_animals) за да ви се return-не нов списък.
+
+        sorted(iterable[, cmp[, key[, reverse]]]) - Return a new sorted list from the items in iterable.
+            - cmp specifies a custom comparison
+            - key specifies a function of one argument that is used to extract a comparison key from each list element
+            - reverse is a boolean value
+            The built-in sorted() function is guaranteed to be stable. A sort is stable if it guarantees not to change the relative order of elements that compare equal
+
+            >>> sorted([5, 2, 3, 1, 4])
+            [1, 2, 3, 4, 5]
+
+            >>> student_tuples = [
+                    ('john', 'A', 15),
+                    ('jane', 'B', 12),
+                    ('dave', 'B', 10),
+            ]
+            >>> sorted(student_tuples, key=lambda student: student[2])   # sort by age
+            [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+
+
+        # слайсинг
+
+        a[start:end]        # items start through end-1
+        a[start:]           # items start through the rest of the array
+        a[:end]             # items from the beginning through end-1
+        a[:]                # a copy of the whole array
+        a[start:end:step]   # start through not past end, by step
+
+
+        Python indexes and slices for a six-element list.
+        Indexes enumerate the elements, slices enumerate the spaces between the elements.
+
+        Index from rear:    -6  -5  -4  -3  -2  -1      a=[0,1,2,3,4,5]    a[1:]==[1,2,3,4,5]
+        Index from front:    0   1   2   3   4   5      len(a)==6          a[:5]==[0,1,2,3,4]
+                           +---+---+---+---+---+---+    a[0]==0            a[:-2]==[0,1,2,3]
+                           | a | b | c | d | e | f |    a[5]==5            a[1:2]==[1]
+                           +---+---+---+---+---+---+    a[-1]==5           a[1:-1]==[1,2,3,4]
+        Slice from front:  :   1   2   3   4   5   :    a[-2]==4
+        Slice from rear:   :  -5  -4  -3  -2  -1   :
+                                                        b=a[:]
+                                                        b==[0,1,2,3,4,5] (shallow copy of a)
+
+
+        cute_animals = ['cat', 'raccoon', 'panda', 'red panda', 'marmot']
+        cute_animals[-1]        # 'marmot'
+        cute_animals[1:3]       # ['raccoon', 'panda']
+        cute_animals[1:-1]      # ['raccoon', 'panda', 'red panda']
+        cute_animals[::-1]      # ['marmot', 'red panda', 'panda', 'raccoon', 'cat']
+        cute_animals[-1:0:-1]   # ['marmot', 'red panda', 'panda', 'raccoon']
+        cute_animals[-1:0:-2]   # ['marmot', 'panda']
+
+        Забележка: Сравняване на списъци
+
+            >>> [1, 2] < [1, 3]
+            True
+            >>> [1, 2] < [1, 1]
+            False
+            >>> [1, 2] < [1, 1, 3]
+            False
+
+    tuple: непроменяема по състав подредена последователност от обекти (~списък, но не съвсем)
+            Има методите `index` и `count` като на списъците
+
+        people = ('Niki', 'Kiro', 'Genata')
+
+        Забележка:
+
+            1) алтернативен синтаксис - без скоби
+
+                people = 'Niki', 'Kiro', 'Genata'
+                people = 'Niki',
+                people = ('Niki') # най-вероятно не е каквото очаквате
+
+            2) Списъците и кортежите съдържат "указатели" към елементи
+
+                coffee, cheese, crackers, tea = 'coffee', 'cheese', 'crackers', 'tea' # unpacking
+                things_i_like = (coffee, cheese, crackers)
+                things_you_like = (crackers, coffee, tea)
+
+                things_i_like[0] == things_you_like[1] # True
+                things_i_like[0] is things_you_like[1] # True
+
+            2б) Т.е. последователността от елементи в кортежа не може да се променя, но самите елементи може да изменят вътрешната си структура (ако са mutable)
+
+                change_me = ([1, 2, 3], [4, 5, 6], [7, 8, 9])
+                change_me[1][1] = 0
+                change_me[2][0] = 'c'
+
+                print(change_me) # ([1, 2, 3], [4, 0, 6], ['c', 8, 9])
+
+    set: стойности без повтаряне и без подредба (множество в математическия смисъл)
+
+        favourite_numbers = set([13,13,13,13])
+
+        # Методи
+        favourite_numbers.add(14) # return None! Add an element to a set 
+                                  # (no effect if the element is already present)
+        favourite_numbers.discard(14) # return None! Remove an element from a set if it is a member. 
+                                      # (no effect if the element is missing)
+        favourite_numbers.clear() # Remove all elements from this set.
+        favourite_numbers.pop() # Remove and return! an arbitrary set element.
+                                # Raises KeyError if the set is empty.
+        favourite_numbers.remove(13) # Remove an element from a set; it must be a member.
+                                     # If the element is not a member, raise a KeyError.
+
+        set([1,2,3]).union([2,3,4]) # set([1, 2, 3, 4]) Обединение (събиране)
+        set([1,2,3]).intersection([2,3,4]) # set([2, 3]) (Сечение)
+        set([1,2,3]).difference([2,3,4]) # set([1]) (Разлика)
+        set([1,2,3]).symmetric_difference([2,3,4]) # set([1, 4]) (Симетрична разлика)
+
+        set([1,2,3]).isdisjoint([4,5,6]) # True (null intersection)
+        set([1,2,3]).issubset([1,2,3,4]) # True (whether another set contains this set)
+        set([1,2,3]).issuperset([1,2]) # True (whether this set contains another set)
+
+        Забележка:
+            1) Множествата са итеруеми и НЕподредени!
+            2) Mожем да проверяваме за принадлежност
+
+                favourite_numbers = set([13,13,13,13])
+                73 in favourite_numbers # False
+
+            3) Алтернативен синтактис за създаване на множества и операции:
+            
+                favourite_numbers = {32, 73, 666, 13, 1024}
+                !!! НО: {} не е празния set!
+
+                >>> {1, 2, 3} | {2, 3, 4} # {1, 2, 3, 4} Обединени
+                >>> {1, 2, 3} & {2, 3, 4} # {2, 3} Сечение
+                >>> {1, 2, 3} - {2, 3, 4} # {1} Разлика
+                >>> {1, 2, 3} ^ {2, 3, 4} # {1, 4} Симетрична разлика
+
+                Проверка за подмножество
+                >>> {1, 2, 3} < {2, 3, 4} # False
+                >>> {2, 3} < {2, 3, 4} # True
+
+
+    dict: ключове/имена, зад които стоят стойности (без подредба)
+
+        Индексите не винаги са достатъчно информативни
+
+        last_names_map = {
+            'Eddie': 'Vedder',
+            'Maynard': 'Keenan',
+            'Matthew': 'Bellamy',
+            'James': 'LaBrie',
+        }
+
+        print('Eddie\'s last names is ' + last_names_map['Eddie'])
+
+        можем да добавяме нови стойности във вече създаден речник
+        last_names_map['Devin'] = 'Townsend'
+
+        или да изтриваме:
+        del last_names_map['Devin']
+
+        Забележка:
+            1) речникът също е неподреден!
+            2) търсенето в речник (по-ключ) е много (константа) по-бързо от търсенето в списък (логаритмично)!
+            2) {} е празен речник, защото е доста по-често използвана структура
+            3) Други начини за създаване
+
+                dict(france="Paris", italy="Rome")
+                dict([('One', 'I'), ('Two', 'II')])
+            4) Всички методи на речниците: help(dict)
+
+                |  clear(...)
+                |      D.clear() -> None.  Remove all items from D.
+                |  
+                |  get(...)
+                |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+                |  
+                |  items(...)
+                |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+                |
+                |  keys(...)
+                |      D.keys() -> list of D's keys
+                |  
+                |  values(...)
+                |      D.values() -> list of D's values
+                |
+                |  iteritems(...)
+                |      D.iteritems() -> an iterator over the (key, value) items of D
+                |  
+                |  iterkeys(...)
+                |      D.iterkeys() -> an iterator over the keys of D
+                |  
+                |  itervalues(...)
+                |      D.itervalues() -> an iterator over the values of D
+                |  
+                |  pop(...)
+                |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
+                |      If key is not found, d is returned if given, otherwise KeyError is raised
+                |  
+                |  popitem(...)
+                |      D.popitem() -> (k, v), remove and return some (key, value) pair as a
+                |      2-tuple; but raise KeyError if D is empty.
+                |  
+                |  setdefault(...)
+                |      D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+                |  
+                |  update(...)
+                |      D.update([E, ]**F) -> None.  Update D from dict/iterable E and F.
+                |      If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+                |      If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+                |      In either case, this is followed by: for k in F: D[k] = F[k]
+                | 
+
+
+- control structure
+
+    - while
+
+        Изпълнява се докато ЛУ е truthy
+
+        a = 5
+        while a:
+            print(a)
+            a -= 1
+
+        Зажележка:
+            1) Falsy values
+                - None, False
+                - "", 0, 0.0
+                - [], {}, (), set()
+            Всички останали са truthy
+
+
+            2) винаги първо се изпълнява ЛУ след това тялото на while-а.
+                в Python няма until/do..while констролна структура, за целта можем да ползваме:
+
+            while True:
+                do_something()
+                if condition():
+                    break
+
+            3)
+                break - прекратява изпълнението само на най-вътрешния цикъл (няма levels)
+                    за да прекратим multiple loops: return/raise Exception/code refactore.
+                continue - започва следващата итерация
+
+    - if
+
+        if a == 5:
+            print("a is five")
+        elif a == 3 and not b == 2:
+            print("a is three, but b is not two")
+        else:
+            print("a is something else or b is two")
+
+        Забележка: 
+            1) Винаги слагайте по-краткото body най отгоре
+
+                if not a == 2:
+                    raise ValueErorr('Give me two')
+                else:
+                    do()
+                    some()
+                    staff()
+
+            2) Когато сте в декларация на фунцкия може да избягвате else с помоща на return
+
+                def calculate_age(dateofbirth):
+                    if not dateofbirth:
+                        return
+                    return (datetime.date.today() - dateofbirth).years
+
+            3) в Python няма switch..case контролна структура, за целта се използват dictionaries
+
+                def f(x):
+                    return {
+                        1: 'a',
+                        2: 'b',
+                    }.get(x, 'c')
+
+                def multiply_or_divide(x):
+                    def multiply(x):
+                        return x * 2
+                    def divide(x):
+                        return x / 2
+                    return {
+                        0: divide,
+                        1: multiply
+                    }[x % 2](x)
+
+
+    - for:
+
+        primes = [3, 5, 7, 11]
+        for e in primes:
+            print(e ** 2) # 9 25 49 121
+
+        Забележка:
+
+            1) Няма иницализация, стъпка и проверка
+                for-ове като в C се постигат с помоща на вградените в езика фунции:
+
+                range(stop) - Create lists containing arithmetic progressions.
+                range(start, stop[, step])
+
+                for i in range(0, 20):
+                    print(i) # 0 1 2 3 4 5 6 .. 19
+
+                for i in range(0, 20, 3):
+                    print(i) # 0 3 6 9 12 15 18
+
+                enumerate(sequence, start=0) - Return an enumerate object
+                
+                for i, season in enumerate(['Spring', 'Summer', 'Fall', 'Winter']):
+                    print(i, season) # (0, 'Spring'), (1, 'Summer'), (2, 'Fall'), (3, 'Winter')
+
+            2) Обхожда iteable структури от данни
+                - list, set, tuple: обхожда по елементи 
+                - dict: обхожда по keys
+                - string: обхожда по chars
+
+            3) How it works (internally):
+                first iter() method is called on the object to converts it to an iterator object.
+                the next() method is called on the iterator object to get the next element of the sequence.
+                A StopIteration exception is raised when there are no elements left to call.
+
+                my_iterator = iter(simple_list)
+                print(my_iterator) # <list_iterator object at 0x7f66b6288630>  
+                next(my_iterator) # 1  
+                next(my_iterator) # 2  
+                next(my_iterator) # 3  
+                next(my_iterator)
+                Traceback (most recent call last):  
+                  File "<stdin>", line 1, in <module>
+                StopIteration
+
+            4) How the built-in iter() works:
+
+                Checks whether the object implements, __iter__ method and calls that to obtain an iterator.
+                If __iter__ method is not implemented, but __getitem__ method is implemented, Python creates an iterator that attempts to fetch items in order, starting from index 0 .
+                If that fails, Python raises TypeError exception saying <classname> object is not iterable .
+
+            5) How to implement the Protocol?:
+
+                1) Traditional Way: By implementing __next__ & __iter__
+
+                    # Python3
+                    class Fib:
+                        '''iterator that yields numbers in the Fibonacci sequence'''
+                        def __init__(self, max):
+                            self.max = max
+                        def __iter__(self):
+                            self.a = 0
+                            self.b = 1
+                            return self
+                        def __next__(self):
+                            fib = self.a
+                            if fib > self.max:
+                                raise StopIteration
+                            self.a, self.b = self.b, self.a + self.b
+                            return fib
+
+                    >>> f = Fib(100)
+                    >>> for i in f:
+                    ...     print(i) # 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
+
+                2) The Pragmatic Way: Implement the __iter__ method as a generator function.
+
+                    # Python3
+                    class Fib:
+                        '''iterator that yields numbers in the Fibonacci sequence'''
+                        def __init__(self, max):
+                            self.max = max
+                        def __iter__(self):
+                            a, b = 0, 1
+                            while a <= self.max:
+                                yield a
+                                a, b = b, a+b
+
+                    >>> f = Fib(100)
+                    >>> for i in f:
+                    ...     print(i) # 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
+
+
+    - Generator Expressions
+
+        In Python, generators provide a convenient way to implement the iterator protocol.
+        Generator is an iterable created using a function with a yield statement.
+        The main feature of generator is evaluating the elements on demand.
+        When you call a normal function with a return statement the function is terminated whenever it encounters a return statement.
+        In a function with a yield statement the state of the function is “saved” from the last call and can be picked up the next time you call a generator function.
+
+        Generator expressions allow the creation of a generator on-the-fly without a yield keyword. 
+        But they don’t share the full power of generator created with a yield function.
+        The syntax and concept are similar to that of a list comprehension.
+        In terms of syntax, the only difference is that you use parenthesis instead of square brackets.
+
+        >>> gen_exp = (x ** 2 for x in range(10) if x % 2 == 0) 
+        >>> for x in gen_exp:
+        ...     print(x) # 0, 4, 16, 36, 64
+
+        The main advantage of generator over a list is that it take much less memory. 
+        The generator yields one item at a time — thus it is more memory efficient than a list.
+        For example, when you want to iterate over a list, Python reserves memory for the whole list. 
+        A generator won’t keep the whole sequence in memory, and will only “generate” the next element of the sequence on demand.
+
+        Недостатък: Не знаем колко е дължината на генератора.
+            >>> len(gen_exp)
+            Traceback (most recent call last):
+              File "<stdin>", line 1, in <module>
+            TypeError: object of type 'generator' has no len()
+
+    - Comprehensions
+
+        - List comprehension
+
+            [израз for променлива in поредица if условие]
+
+            >>> [x * x for x in range(0, 10)]
+            [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+            >>> [x * x for x in range(0, 10) if x % 2]
+            [1, 9, 25, 49, 81]
+
+            Забележка:
+
+                Един list comprehension може да се вложи в друг, защото връща нещо итерируемо
+
+                >>> [(x, y) for x in [1,2,3] for y in [3,1,4] if x != y]
+                [(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+
+                НО НЕ ГО ПРАВЕТЕ!
+
+        - Set comprehension (Като list comprehension, но с { })
+
+            >>> import math
+            >>> {int(math.sqrt(x)) for x in range(1,100)}
+            {1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+        - Dict comprehension (Като set comprehension, но с key:value вместо само key)
+
+            >>> {i: chr(65+i) for i in range(10)}
+            {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 8: 'I', 9: 'J'}
+
+    - map/filter/reduce
+
+
+        map(function, iterable, ...) - Apply function to every item of iterable and return a list of the results.
+            If additional iterable arguments are passed, function must take that many arguments and is applied to the items from all iterables in parallel
+
+            map(lambda x: x*x, range(0, 10)) # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+            Аналогично на: [x * x for x in range(0, 10)]
+
+
+        filter(function, iterable) - Construct a list from those elements of iterable for which function returns true
+            
+            Equivalent to: [item for item in iterable if function(item)]
+            and when function is None: [item for item in iterable if item]
+
+
+        reduce(function, iterable[, initializer]) - Apply function of two arguments cumulatively to the items of iterable,
+            from left to right, so as to reduce the iterable to a single value.
+            For example, reduce(lambda x, y: x+y, [1, 2, 3, 4, 5]) calculates ((((1+2)+3)+4)+5)
+
+
+PEP8! Това е конвенцията за стил на Python. Задължително спазване!
+
+    Индентация с 4 интервала за всяко ниво на влагане
+    Максимално 79 символа на ред!
+    snake_case за имена на функции, методи, променливи, параметри
+    имена на "константи" в SCREAMING_SNAKE_CASE
+    _turn_around, __seriously_turn_around за protected/private методи
+    използване на запазени думи? 1 подчертавка след името: range_
+    но.. по-добре използвайте друго име
+    интервал след "," при изброяване и ":" при конструиране на dict: [1, 2, 3] {1: 2, 2: 4, 13: 26}
+    без интервали след (, [, { и след ), ], }: func(1, 2, 3), [5, 6, 7, 8]
+    по един интервал около оператори: a == b; 3 > 4; "abra" + "-" + "kadabra"
+    изключение: може да липсват около оператори с по-висок приоритет в подходящ конеткст: 42 - 6*9
+    без интервали, когато задаваме стойност по подразбиране: def my_func(a, b, option=True): ..
+    и при подаване на именовани параметри при извикване my_func(option=False, b=13, a=666)
+    без скоби около условията на while/for/if/elif/return: while True: ...
+
+    Никой не е запомнил целия pep8 само с четене
+    Всеки редактор може да бъде конфигуриран, така че да използва pep8, за да проверява кода ви и да се кара когато не правите нещо правилно
+
+
+
+- Още build in functions
+
+    all(iterable) - Return True if all elements of the iterable are true
+
+    any(iterable) - Return True if any element of the iterable is true
+
+    zip(iterable, ...) - This function returns a list of tuples, where the i-th tuple 
+                        contains the i-th element from each of the argument sequences or iterables.
+
+        >>> x = [1, 2, 3]
+        >>> y = [4, 5, 6]
+        >>> zip(x, y)
+        [(1, 4), (2, 5), (3, 6)]
+
+
+    list(iterable) - Return a list whose items are the same and in the same order as iterable’s items.
+         iterable may be either a sequence, a container that supports iteration, or an iterator object. If iterable is already a list, a copy is made and returned, similar to iterable[:]
+
+    abs(x) - Return the absolute value of a number
+
+    round(number[, ndigits]) - Return the floating point value number rounded to ndigits digits after the decimal point.
+
+    sum(iterable, start=0) - Sums start and the items of an iterable from left to right and returns the total.
+
+    max(iterable) - Return the largest item in an iterable
+    max(arg1, arg2, *args)
+
+    min(iterable) - Return the smallest item in an iterable
+    min(arg1, arg2, *args)
+
+    bool(x) - Return a Boolean value, i.e. one of True or False
+
+    callable(object) - Return True if the object argument appears callable, False if not
+
+    dir(object) - Attempt to return a list of valid attributes for that object.
+
+    divmod(a, b) - return a pair of numbers consisting of their quotient(частно) and remainder(остатък) when using long division
+
+    int(x=0) - Return an integer object constructed from a number or string x, or return 0 if no arguments are given.
+
+    float(x) - Return a floating point number constructed from a number or string x
+    
+    id(object) - Return the “identity” of an object.
+        This is an integer (or long integer) which is guaranteed to be unique and constant for this object during its lifetime.
+
+    hash(object) - Return the hash value of the object (if it has one).
+        Hash values are integers. They are used to quickly compare dictionary keys during a dictionary lookup. Numeric values that compare equal have the same hash value (even if they are of different types, as is the case for 1 and 1.0).
+
+
+    hasattr(object, name) - True if the string is the name of one of the object’s attributes, False if not
+
+    getattr(object, name[, default]) - Return the value of the named attribute of object. name must be a string.
+    
+    setattr(object, name, value) - assigns the value to the attribute
+        setattr(x, 'foobar', 123) is equivalent to x.foobar = 123.
+
+
+    isinstance(object, classinfo) - Return true if the object argument is an instance of the classinfo argument,
+        or of a (direct, indirect or virtual) subclass thereof.
+
+    type(object)
+    type(name, bases, dict)
+        With one argument, return the type of an object. The return value is a type object. The isinstance() built-in function is recommended for testing the type of an object.
+        With three arguments, return a new type object. This is essentially a dynamic form of the class statement.
+
+        >>> class X(object):
+        ...     a = 1
+        ...
+        >>> X = type('X', (object,), dict(a=1))
+
+
+    classmethod(function) - Return a class method for function.
+        A class method receives the class as implicit first argument, 
+        just like an instance method receives the instance. 
+
+        class C(object):
+            @classmethod
+            def f(cls, arg1, arg2, ...):
+
+    staticmethod(function) - Return a static method for function.
+        A static method does not receive an implicit first argument. To declare a static method, use this idiom:
+
+        class C(object):
+            @staticmethod
+            def f(arg1, arg2, ...):
+                ...
+
+    property([fget[, fset[, fdel[, doc]]]]) - Return a property attribute.
+        fget is a function for getting an attribute value. fset is a function for setting an attribute value. fdel is a function for deleting an attribute value. And doc creates a docstring for the attribute.
+
+        class C(object):
+            def __init__(self):
+                self._x = None
+
+            def getx(self):
+                return self._x
+
+            def setx(self, value):
+                self._x = value
+
+            def delx(self):
+                del self._x
+
+            x = property(getx, setx, delx, "I'm the 'x' property.")
+
+
+- Receiving input from Console
+    input()  function is used to receive input from the console.
+
+    input([prompt]) -> string
+
+    exmaple:
+        name = input("Enter your name: ")
+
+
+- Importing modules
+    Python organizes codes using module. Python comes with many in built modules ready to use for e.g there is a math  module for mathematical related functions, re  module for regular expression and so on.
+
+    import module_name
+    import module_name as module_name_alias
+    import module_name_1, module_name_2
+    from module_name import some_function, SomeClass 
+
+
+
+Задачи: Какво ще изведе този код?
+
+foods = ['spam', 'eggs', 'ham']
+things = foods
+things[1] = 'chips'
+print(foods[1])
+
+
+my_string = '1234567890'
+my_string[10]
+
+
+my_data = set(range(10))
+for x in my_data:
+    print(x)
+    break
+
+
