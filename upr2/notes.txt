@@ -519,11 +519,14 @@ Python
             If additional iterable arguments are passed, function must take that many arguments and is applied to the items from all iterables in parallel
 
             map(abs, [-1, 4, 5, -6]) # [1, 4, 5, 6]
-
             Аналогично на: [abs(x) for x in [-1, 4, 5, -6]]
+
+            map(lambda x: x**2, [-1, 4, 5, -6])
 
 
         filter(function, iterable) - Construct a list from those elements of iterable for which function returns true
+
+            filter(lambda x: x>5, [1,2,3,4,10,11])
             
             Equivalent to: [item for item in iterable if function(item)]
             and when function is None: [item for item in iterable if item]
@@ -560,17 +563,21 @@ Python
 
     - Closure - function accessing variables outside of its local scope.
 
-        def outer_func():
-            x = 5
+        def outer_func(x):
             def inner_func(y = 3):
                 return (x + y)
             return inner_func
 
 
-        a = outer_func()
+        a = outer_func(5)
         a() # 8
 
         Closure is commonly used in what is referred to as Function Factory - these are functions that return other functions. The returned functions are specialized. The Function Factory takes in argument(s), creates local function that creates its own argument(s) and also uses the argument(s) passed to the function factory. This is possible with closures
+
+        def raise_factory(x):
+            def power(y):
+                return y**x
+            return power
 
         >>> sqrt = raise_factory(0.5)
         >>> quadratic = raise_factory(2)
@@ -588,6 +595,11 @@ Python
             def uppercase():
                 return func().upper()
             return uppercase
+
+        def say_hello():
+            return 'hello'
+
+        say_hello = capitalize(say_hello)
 
         @capitalize             #equal to: say_hello = capitalize(say_hello)
         def say_hello():
@@ -612,7 +624,7 @@ Python
     - Decorators with arguments - decorator is a callable, this make it possible for us to pass in arguments to our decorators.
         Arguments are passed into decorators same way it can be passed into normal functions.
 
-        def allow(*arg_types):
+        def allow(*arg_types, **kwarg_types):
             def decorator(func):
                 def func_wrapper(*args):
                     for i, (arg, t) in enumerate(zip(args, arg_types)):
@@ -623,15 +635,20 @@ Python
                                 t1=t.__name__,
                                 t2=arg.__class__.__name__,
                             ))
-                    return func(*args)
+                    res = func(*args)
+                    response_type = kwarg_types.get('response_type')
+                    if response_type is not None:
+                        if not isinstance(res, response_type):
+                            raise TypeError('invalid response')
+                    return res
                 return func_wrapper
             return decorator
 
-        @allow(int, int)
+        @allow(int, int, response_type=float)
         def multiply(a, b):
           return a*b
 
-        # which translates into: multiply = allow(int, int)(multiply)
+        # which translates into: multiply = allow(int, int, response_type=float)(multiply)
 
         multiply(2, 4) # 8
         multiply(2, 4.0) # TypeError: Argument #1 extected to be 'int', 'float' found
@@ -725,6 +742,24 @@ PEP8! Това е конвенцията за стил на Python. Задълж
     isinstance(object, classinfo) - Return true if the object argument is an instance of the classinfo argument,
         or of a (direct, indirect or virtual) subclass thereof.
 
+        >>> class A(object):
+        ...     pass
+        ... 
+        >>> class B(A):
+        ...     pass
+        ... 
+        >>> a = A()
+        >>> b = B()
+        >>> 
+        >>> isinstance(a, A)
+        True
+        >>> isinstance(a, B)
+        False
+        >>> isinstance(b, A)
+        True
+        >>> isinstance(b, B)
+        True
+
     type(object)
     type(name, bases, dict)
         With one argument, return the type of an object. The return value is a type object. The isinstance() built-in function is recommended for testing the type of an object.
@@ -770,6 +805,15 @@ PEP8! Това е конвенцията за стил на Python. Задълж
 
             x = property(getx, setx, delx, "I'm the 'x' property.")
 
+            @property
+            def y(self):
+                return self.x + 5
+
+
+        c = C()
+        c.x = 5
+        a = c.x
+
 
 - Receiving input from Console
     input()  function is used to receive input from the console.
@@ -778,7 +822,6 @@ PEP8! Това е конвенцията за стил на Python. Задълж
 
     exmaple:
         name = input("Enter your name: ")
-
 
 - Importing modules
     Python organizes codes using module. Python comes with many in built modules ready to use for e.g there is a math  module for mathematical related functions, re  module for regular expression and so on.
