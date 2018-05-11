@@ -1,0 +1,31 @@
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="x" value="{{filters.x}}">
+    <select name='operation'>
+        <option 
+            value="add" 
+            {% if filters.operation == 'add' %}
+                selected="selected"
+            {%endif %}
+        >+</option>  
+        <option value="substract"
+            {% if filters.operation == 'substract' %}
+                selected="selected"
+            {%endif %}
+        >-</option>    
+    </select>
+    <input type="text" name="y" value="{{filters.y}}">
+    <input type="submit" name="calc" value="calc">
+</form>
+
+
+    POST: {{request.POST}}
+    <hr/>
+    FILTERS: {{filters}}
+
+
+<hr/>
+
+{% if filters.result %}
+    RESULT: {{filters.result}}
+{% endif %}
