@@ -1,31 +1,32 @@
 <form method="POST">
     {% csrf_token %}
-    <input type="text" name="x" value="{{filters.x}}">
-    <select name='operation'>
-        <option 
-            value="add" 
-            {% if filters.operation == 'add' %}
-                selected="selected"
-            {%endif %}
-        >+</option>  
-        <option value="substract"
-            {% if filters.operation == 'substract' %}
-                selected="selected"
-            {%endif %}
-        >-</option>    
-    </select>
-    <input type="text" name="y" value="{{filters.y}}">
+    {{form}}
     <input type="submit" name="calc" value="calc">
 </form>
 
-
-    POST: {{request.POST}}
-    <hr/>
-    FILTERS: {{filters}}
-
-
-<hr/>
-
-{% if filters.result %}
-    RESULT: {{filters.result}}
+{% if request.GET.result %}
+    RESULT: {{request.GET.result}}
 {% endif %}
+
+<table>
+    <tr>
+        <th>x</th>
+        <th>operation</th>
+        <th>y</th>
+        <th>result</th>
+        <th>view</th>
+    </tr>
+    {% for result in results %}
+        <tr>
+            <td>{{result.x}}</td>
+            <td>{{result.operation}}</td>
+            <td>{{result.y}}</td>
+            <td>{{result.result}}</td>
+            <td>
+                <a href="{{result.get_absolute_url}}">
+                    view
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
