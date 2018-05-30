@@ -1,8 +1,0 @@
-{% include "messages.html" %}
-
-<form method="POST">
-    {% csrf_token %}
-    <input type="text" name="name" placeholder="name">
-    <input type="password" name="password" placeholder="password">
-    <input type="submit" value="Login"> or <a href="{% url 'authentication:register' %}">Register</a>
-</form>
