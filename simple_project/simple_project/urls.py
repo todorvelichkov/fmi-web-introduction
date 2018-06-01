@@ -20,7 +20,7 @@ from simple_project.views import index_view
 urlpatterns = [
     url(r'^$', index_view),
     url(r'^calc/', include('calc.urls')),
-    url(r'^auth/', include('authentication.urls')),
+    # url(r'^auth/', include('registration.urls')),
     url(r'^accounts/', include('accounts.urls')),
     url(r'^admin/', admin.site.urls),
 ]

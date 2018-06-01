@@ -1,0 +1,7 @@
+{% extends "registration/base.html" %}
+
+{% block content %}
+    Hello {{user.name}}
+    <br />
+    IF you want you can <a href="{% url 'registration:logout' %}">Log-out</a>
+{% endblock %}

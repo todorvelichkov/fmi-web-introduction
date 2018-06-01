@@ -1,0 +1,9 @@
+{% extends "registration/base.html" %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_ul}}
+        <input type="submit" value="Register">
+    </form>
+{% endblock %}

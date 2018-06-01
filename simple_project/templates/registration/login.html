@@ -1,0 +1,10 @@
+{% extends "registration/base.html" %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_ul}}
+        <input type="submit" value="Login">
+    </form>
+    or IF you want you can <a href="{% url 'registration:register' %}">Register</a>
+{% endblock %}
