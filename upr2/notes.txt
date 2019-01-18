@@ -875,3 +875,6 @@ assert human_list.humans_count == 5
 
 human_list.sort_by('name', 'gender', reverse=True)
 assert human_list.humans == [stoyan, petko, ivan1, ivan2, draganka]
+
+
+Задача: Profile strenght функционалност. Всеки аттрибут да има тегло релативно на останалите, сумата им винаги да е 100%, добавянето на нов атрибут да не налага промяна на остналите.
