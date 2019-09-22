@@ -5,11 +5,11 @@ HTTP
   # resources: https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
 
   HTTP protocol - Hypertext Transfer Protocol
-    - build on top ot TCP (Transmission Control Protocol)
+    - build on top of TCP (Transmission Control Protocol)
     - function as request-response protocol in client-server computing model
     - stateless protocol, but not sessionless
 
-    URI - Uniform Resource Locators
+    URI - Uniform Resource Identifier
       - Every HTTP URL conforms to the syntax of a generic URI. A generic URI is of the form:
 
         scheme:[//[user[:password]@]host[:port]][/path][?query][#fragment]
@@ -100,6 +100,7 @@ Programing
   - Built-in Atomic Data Types
     - int
     - float
+    - complex
     - bool
   - Built-in Collection Data Types
     - list
@@ -123,10 +124,10 @@ Programing
   - control structure
     - while
     - for
-    - Exception handling
-    - defining functions
+    - Exceptions
+    - functions
       - def funcname(*args, **kwargs)
-    - defining class
+    - class
       - class classname(parents)
     
 

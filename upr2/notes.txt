@@ -58,10 +58,9 @@ Python
 
         Забележка: Използвайте sorted(animals) за да ви се return-не нов лист.
 
-        sorted(iterable[, cmp[, key[, reverse]]]) - Return a new sorted list from the items in iterable.
-            - cmp specifies a custom comparison
-            - key specifies a function of one argument that is used to extract a comparison key from each list element
-            - reverse is a boolean value
+        sorted(iterable, key=None, reverse=False) - Return a new sorted list from the items in iterable.
+            - key specifies a single argument function to customize the sort order
+            - reverse is a boolean flag to reverse the sorting order
             The built-in sorted() function is guaranteed to be stable. A sort is stable if it guarantees not to change the relative order of elements that compare equal
 
             >>> student_tuples = [
@@ -130,6 +129,7 @@ Python
                 people = 'Niki', 'Kiro', 'Genata'
                 people = 'Niki',
                 people = ('Niki') # НЕ Е tuple
+                people = ('Niki',) # Е tuple
 
             2) Листовете и кортежите съдържат "указатели" към елементи
 
@@ -150,7 +150,10 @@ Python
 
     set: стойности без повтаряне и без подредба (множество в математическия смисъл)
 
-        favourite_numbers = set([13,13,13,13])
+        favourite_numbers = set([13,13,13,13]) # {13}
+
+        # алтернативен синтаксис - с къдрави скоби
+        favourite_numbers = {13, 13, 13, 13} # {13}
 
         # Методи
         favourite_numbers.add(14) # return None! Add an element to a set 
@@ -176,7 +179,6 @@ Python
             1) Множествата са итеруеми и НЕподредени!
             2) Mожем да проверяваме за принадлежност
 
-                favourite_numbers = set([13,13,13,13])
                 73 in favourite_numbers # False
 
             3) Алтернативен синтактис за създаване на множества и операции:
@@ -207,7 +209,7 @@ Python
             'James': 'LaBrie',
         }
 
-        print('Eddie\'s last names is ' + last_names_map['Eddie'])
+        print("Eddie's last names is: %s" % last_names_map['Eddie'])
 
         можем да добавяме нови стойности във вече създаден речник
         last_names_map['Devin'] = 'Townsend'
@@ -229,26 +231,20 @@ Python
                 |  clear(...)
                 |      D.clear() -> None.  Remove all items from D.
                 |  
+                |  copy(...)
+                |      D.copy() -> a shallow copy of D
+                |  
+                |  fromkeys(iterable, value=None, /) from builtins.type
+                |      Returns a new dict with keys from iterable and values equal to value.
+                |  
                 |  get(...)
                 |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
                 |  
                 |  items(...)
-                |      D.items() -> list of D's (key, value) pairs, as 2-tuples
-                |
+                |      D.items() -> a set-like object providing a view on D's items
+                |  
                 |  keys(...)
-                |      D.keys() -> list of D's keys
-                |  
-                |  values(...)
-                |      D.values() -> list of D's values
-                |
-                |  iteritems(...)
-                |      D.iteritems() -> an iterator over the (key, value) items of D
-                |  
-                |  iterkeys(...)
-                |      D.iterkeys() -> an iterator over the keys of D
-                |  
-                |  itervalues(...)
-                |      D.itervalues() -> an iterator over the values of D
+                |      D.keys() -> a set-like object providing a view on D's keys
                 |  
                 |  pop(...)
                 |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
@@ -263,10 +259,13 @@ Python
                 |  
                 |  update(...)
                 |      D.update([E, ]**F) -> None.  Update D from dict/iterable E and F.
-                |      If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
-                |      If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
-                |      In either case, this is followed by: for k in F: D[k] = F[k]
-                | 
+                |      If E is present and has a .keys() method, then does:  for k in E: D[k] = E[k]
+                |      If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v
+                |      In either case, this is followed by: for k in F:  D[k] = F[k]
+                |  
+                |  values(...)
+                |      D.values() -> an object providing a view on D's values
+
 
 
 - control structure
@@ -300,7 +299,7 @@ Python
             3)
                 break - прекратява изпълнението само на най-вътрешния цикъл (няма levels)
                     за да прекратим multiple loops: return/raise Exception/code refactore.
-                continue - започва следващата итерация
+                continue - премини към следващата итерация
 
     - if
 
@@ -362,8 +361,22 @@ Python
             1) Няма иницализация, стъпка и проверка
                 for-ове като в C се постигат с помоща на вградените в езика фунции:
 
-                range(stop) - Create lists containing arithmetic progressions.
-                range(start, stop[, step])
+                range(stop)
+
+                    stop: Number of integers (whole numbers) to generate, starting from zero. eg. range(3) == [0, 1, 2].
+
+                range([start], stop[, step])
+
+                    start: Starting number of the sequence.
+                    stop: Generate numbers up to, but not including this number.
+                    step: Difference between each number in the sequence.
+
+                Note that:
+
+                    All parameters must be integers.
+                    All parameters can be positive or negative.
+                    range() (and Python in general) is 0-index based, meaning list indexes start at 0, not 1. eg. The syntax to access the first element of a list is mylist[0]. Therefore the last integer generated by range() is up to, but not including, stop. For example range(0, 5) generates integers from 0 up to, but not including, 5.
+
 
                 for i in range(0, 20):
                     print(i) # 0 1 2 3 4 5 6 .. 19
@@ -386,7 +399,7 @@ Python
                 the next() method is called on the iterator object to get the next element of the sequence.
                 A StopIteration exception is raised when there are no elements left to call.
 
-                my_iterator = iter(simple_list)
+                my_iterator = iter([1,2,3])
                 print(my_iterator) # <list_iterator object at 0x7f66b6288630>  
                 next(my_iterator) # 1  
                 next(my_iterator) # 2  
@@ -402,7 +415,7 @@ Python
                 If __iter__ method is not implemented, but __getitem__ method is implemented, Python creates an iterator that attempts to fetch items in order, starting from index 0 .
                 If that fails, Python raises TypeError exception saying <classname> object is not iterable .
 
-            5) How to implement the Protocol?:
+            5) How to implement the Protocol?
 
                 1) Traditional Way: By implementing __next__ & __iter__
 
@@ -515,8 +528,9 @@ Python
 
     - map/filter/reduce
 
-        map(function, iterable, ...) - Apply function to every item of iterable and return a list of the results.
-            If additional iterable arguments are passed, function must take that many arguments and is applied to the items from all iterables in parallel
+        map(function, iterable, ...) - Return an iterator that applies function to every item of iterable, yielding the results
+            If additional iterable arguments are passed, function must take that many arguments and is applied to the items from all iterables in parallel.
+            With multiple iterables, the iterator stops when the shortest iterable is exhausted
 
             map(abs, [-1, 4, 5, -6]) # [1, 4, 5, 6]
             Аналогично на: [abs(x) for x in [-1, 4, 5, -6]]
@@ -524,16 +538,20 @@ Python
             map(lambda x: x**2, [-1, 4, 5, -6])
 
 
-        filter(function, iterable) - Construct a list from those elements of iterable for which function returns true
+        filter(function, iterable) - Construct an iterator from those elements of iterable for which function returns true.
+            If function is None, the identity function is assumed, that is, all elements of iterable that are false are removed.
 
-            filter(lambda x: x>5, [1,2,3,4,10,11])
+            filter(lambda x: x>5, [1,2,3,4,10,11]) # [10, 11]
             
-            Equivalent to: [item for item in iterable if function(item)]
-            and when function is None: [item for item in iterable if item]
+            Equivalent to: (item for item in iterable if function(item))
+            and when function is None: (item for item in iterable if item)
 
 
-        reduce(function, iterable[, initializer]) - Apply function of two arguments cumulatively to the items of iterable,
-            from left to right, so as to reduce the iterable to a single value.
+        reduce(function, iterable[, initializer]) - Apply function of two arguments cumulatively to the items of sequence, from left to right, 
+            so as to reduce the sequence to a single value.
+
+            # from functools import reduce
+
             For example, reduce(lambda x, y: x+y, [1, 2, 3, 4, 5]) calculates ((((1+2)+3)+4)+5)
 
     - Local functions: functions defined within another function
@@ -601,7 +619,9 @@ Python
 
         say_hello = capitalize(say_hello)
 
-        @capitalize             #equal to: say_hello = capitalize(say_hello)
+        # equal to:
+
+        @capitalize
         def say_hello():
             return 'hello'
 
@@ -644,7 +664,7 @@ Python
                 return func_wrapper
             return decorator
 
-        @allow(int, int, response_type=float)
+        @allow(int, int, response_type=int)
         def multiply(a, b):
           return a*b
 
@@ -686,12 +706,15 @@ PEP8! Това е конвенцията за стил на Python. Задълж
 
 - Още build in functions
 
-    all(iterable) - Return True if all elements of the iterable are true
+    all(iterable) - Return True if all elements of the iterable are true (or if the iterable is empty).
 
-    any(iterable) - Return True if any element of the iterable is true
+    any(iterable) - Return True if any element of the iterable is true. If the iterable is empty, return False.
 
-    zip(iterable, ...) - This function returns a list of tuples, where the i-th tuple 
-                        contains the i-th element from each of the argument sequences or iterables.
+    zip(iterable, ...) - Make an iterator that aggregates elements from each of the iterables.
+        Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument sequences or iterables. The iterator stops when the shortest input iterable is exhausted.
+        With a single iterable argument, it returns an iterator of 1-tuples.
+        With no arguments, it returns an empty iterator
+
 
         >>> x = [1, 2, 3]
         >>> y = [4, 5, 6]
@@ -700,47 +723,73 @@ PEP8! Това е конвенцията за стил на Python. Задълж
 
 
     list(iterable) - Return a list whose items are the same and in the same order as iterable’s items.
-         iterable may be either a sequence, a container that supports iteration, or an iterator object. If iterable is already a list, a copy is made and returned, similar to iterable[:]
+        If iterable is already a list, a copy is made and returned, similar to iterable[:]
 
-    round(number[, ndigits]) - Return the floating point value number rounded to ndigits digits after the decimal point.
+    round(number[, ndigits]) - Return number rounded to ndigits precision after the decimal point. 
+        If ndigits is omitted or is None, it returns the nearest integer to its input.
 
-    sum(iterable, start=0) - Sums start and the items of an iterable from left to right and returns the total.
+    sum(iterable, start=0) - Sums start and the items of an iterable from left to right and returns the total. 
+        start defaults to 0. The iterable’s items are normally numbers, and the start value is not allowed to be a string.
 
-    max(iterable) - Return the largest item in an iterable
-    max(arg1, arg2, *args)
+    max(arg1, arg2, *args[, key])
+    max(iterable, *[, key, default])
+        Return the largest item in an iterable or the largest of two or more arguments.
 
-    min(iterable) - Return the smallest item in an iterable
-    min(arg1, arg2, *args)
+        If one positional argument is provided, it should be an iterable. 
+            The largest item in the iterable is returned. 
 
-    bool(x) - Return a Boolean value, i.e. one of True or False
+        If two or more positional arguments are provided, 
+            the largest of the positional arguments is returned.
 
-    callable(object) - Return True if the object argument appears callable, False if not
+        There are two optional keyword-only arguments. 
+            The key argument specifies a one-argument ordering function like that used for list.sort().
+            The default argument specifies an object to return if the provided iterable is empty.
+            If the iterable is empty and default is not provided, a ValueError is raised.
+
+    min(arg1, arg2, *args[, key])
+    min(iterable, *[, key, default])
+        Similar to max but, return the smallest item in an iterable
+
+    bool(x) - Return a Boolean value, i.e. one of True or False. x is converted using the standard truth testing procedure.
+
+    callable(object) - Return True if the object argument appears callable, False if not.
 
     dir(object) - Attempt to return a list of valid attributes for that object.
+        Without arguments, return the list of names in the current local scope. 
 
-    divmod(a, b) - return a pair of numbers consisting of their quotient(частно) and remainder(остатък) when using long division
+    divmod(a, b) - return a pair of numbers consisting of their quotient(частно) and remainder(остатък) when using integer division
+        With mixed operand types, the rules for binary arithmetic operators apply.
+        For integers, the result is the same as (a // b, a % b). 
+        For floating point numbers the result is (q, a % b), 
+            where q is usually math.floor(a / b) but may be 1 less than that. 
+            In any case q * b + a % b is very close to a, 
+            if a % b is non-zero it has the same sign as b, and 0 <= abs(a % b) < abs(b).
 
-    int(x=0) - Return an integer object constructed from a number or string x, or return 0 if no arguments are given.
+    int(x=0, base=10) - Return an integer object constructed from a number or string x, or return 0 if no arguments are given.
+        For floating point numbers, this truncates towards zero
 
     float(x) - Return a floating point number constructed from a number or string x
     
     id(object) - Return the “identity” of an object.
-        This is an integer (or long integer) which is guaranteed to be unique and constant for this object during its lifetime.
+        This is an integer which is guaranteed to be unique and constant for this object during its lifetime. 
+        Two objects with non-overlapping lifetimes may have the same id() value.
 
     hash(object) - Return the hash value of the object (if it has one).
         Hash values are integers. They are used to quickly compare dictionary keys during a dictionary lookup. Numeric values that compare equal have the same hash value (even if they are of different types, as is the case for 1 and 1.0).
 
 
-    hasattr(object, name) - True if the string is the name of one of the object’s attributes, False if not
+    hasattr(object, name) - True if the string is the name of one of the object’s attributes, False if not.
+        This is implemented by calling getattr(object, name) and seeing whether it raises an AttributeError or not.
 
     getattr(object, name[, default]) - Return the value of the named attribute of object. name must be a string.
     
-    setattr(object, name, value) - assigns the value to the attribute
-        setattr(x, 'foobar', 123) is equivalent to x.foobar = 123.
+    setattr(object, name, value) - assigns the value to the attribute, provided the object allows it.
+        For example, setattr(x, 'foobar', 123) is equivalent to x.foobar = 123.
 
 
-    isinstance(object, classinfo) - Return true if the object argument is an instance of the classinfo argument,
+    isinstance(object, classinfo) - Return true if the object argument is an instance of the classinfo argument, 
         or of a (direct, indirect or virtual) subclass thereof.
+        If classinfo is a tuple of type objects (or recursively, other such tuples), return true if object is an instance of any of the types
 
         >>> class A(object):
         ...     pass
@@ -762,35 +811,45 @@ PEP8! Това е конвенцията за стил на Python. Задълж
 
     type(object)
     type(name, bases, dict)
-        With one argument, return the type of an object. The return value is a type object. The isinstance() built-in function is recommended for testing the type of an object.
+        With one argument, return the type of an object. The return value is a type object and generally the same object as returned by object.__class__.
+        Note: The isinstance() built-in function is recommended for testing the type of an object, because it takes subclasses into account.
+
         With three arguments, return a new type object. This is essentially a dynamic form of the class statement.
 
-        >>> class X(object):
+        >>> class X:
         ...     a = 1
         ...
         >>> X = type('X', (object,), dict(a=1))
 
 
-    classmethod(function) - Return a class method for function.
+    @classmethod(function) - Transform a method into a class method.
         A class method receives the class as implicit first argument, 
         just like an instance method receives the instance. 
 
-        class C(object):
+        To declare a class method, use this idiom:
+
+        class C:
             @classmethod
-            def f(cls, arg1, arg2, ...):
+            def f(cls, arg1, arg2, ...): ...
 
-    staticmethod(function) - Return a static method for function.
-        A static method does not receive an implicit first argument. To declare a static method, use this idiom:
+    @staticmethod(function) - Transform a method into a static method.
+        A static method does not receive an implicit first argument. 
 
-        class C(object):
+        To declare a static method, use this idiom:
+
+        class C:
             @staticmethod
-            def f(arg1, arg2, ...):
-                ...
+            def f(arg1, arg2, ...): ...
 
-    property([fget[, fset[, fdel[, doc]]]]) - Return a property attribute.
-        fget is a function for getting an attribute value. fset is a function for setting an attribute value. fdel is a function for deleting an attribute value. And doc creates a docstring for the attribute.
+    @property(fget=None, fset=None, fdel=None, doc=None) - Return a property attribute.
+        fget is a function for getting an attribute value. 
+        fset is a function for setting an attribute value. 
+        fdel is a function for deleting an attribute value. 
+        And doc creates a docstring for the attribute.
 
-        class C(object):
+        A typical use is to define a managed attribute x:
+
+        class C:
             def __init__(self):
                 self._x = None
 
@@ -805,76 +864,50 @@ PEP8! Това е конвенцията за стил на Python. Задълж
 
             x = property(getx, setx, delx, "I'm the 'x' property.")
 
-            @property
-            def y(self):
-                return self.x + 5
+        Which is the same as:
 
+        class C:
+            def __init__(self):
+                self._x = None
+
+            @property
+            def x(self):
+                """I'm the 'x' property."""
+                return self._x
+
+            @x.setter
+            def x(self, value):
+                self._x = value
+
+            @x.deleter
+            def x(self):
+                del self._x
 
         c = C()
         c.x = 5
-        a = c.x
+        print(c.x)
 
 
 - Receiving input from Console
-    input()  function is used to receive input from the console.
-
     input([prompt]) -> string
 
-    exmaple:
-        name = input("Enter your name: ")
+    If the prompt argument is present, it is written to standard output without a trailing newline.
+    The function then reads a line from input, converts it to a string (stripping a trailing newline), and returns that. 
+    When EOF is read, EOFError is raised. Example:
+
+    >>> s = input('Enter your name: ')  
+    --> Monty Python
+    >>> s # "Monty Python"
+
+
 
 - Importing modules
-    Python organizes codes using module. Python comes with many in built modules ready to use for e.g there is a math  module for mathematical related functions, re  module for regular expression and so on.
+    Python organizes codes using module. Python comes with many in built modules ready to use 
+    e.g there is a:
+    math module for mathematical related functions,
+    re  module for regular expression and so on.
 
     import module_name
     import module_name as module_name_alias
     import module_name_1, module_name_2
     from module_name import some_function, SomeClass
-
-
-
-
-Задача:
-
-class Human(object):
-    #write Human implementation here
-    pass
-
-class HumanList(object):
-    #write HumanList implementation here
-    pass
-
-
-
-petko = Human(name='Petko', born=1995, gender='M')
-assert petko.age == 23
-petko.born = 1996
-assert petko.age == 22
-
-ivan1 = Human(name='Ivan', born=1989, gender='M')
-stoyan = Human(name='Stoyan', born=1992, gender='M')
-draganka = Human(name='Draganka', born=1997, gender='F')
-ivan2 = Human(name='Ivan', born=2002, gender='M')
-
-human_list = HumanList(
-    ivan1,
-    stoyan,
-    draganka,
-    ivan2,
-)
-
-assert human_list.humans_count == 4
-assert human_list.mens_count == 3
-assert human_list.womens_count == 1
-assert human_list.min_age == 16
-assert human_list.max_age == 29
-
-human_list.add(petko)
-
-assert human_list.humans_count == 5
-
-human_list.sort_by('name', 'gender', reverse=True)
-assert human_list.humans == [stoyan, petko, ivan1, ivan2, draganka]
-
-
-Задача: Profile strenght функционалност. Всеки аттрибут да има тегло релативно на останалите, сумата им винаги да е 100%, добавянето на нов атрибут да не налага промяна на остналите.

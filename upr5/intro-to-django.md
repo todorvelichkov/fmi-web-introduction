@@ -4,7 +4,7 @@
 ## Installation
 ```
     # First we need pip
-    sudo apt-get install python-pip python-dev build-essential
+    sudo apt install python3-venv python3-pip
 
     # Check versions
     pip -V

@@ -72,7 +72,7 @@ class Creature(object):
 
     def move(self):
         new_cell = random.choice(self.terrain.get_surrounding_cells(self.cell))
-        print '%s moving from %s to %s' % (self, self.cell, new_cell)
+        print('%s moving from %s to %s' % (self, self.cell, new_cell))
         self.cell = new_cell
 
     def play(self):
@@ -99,7 +99,7 @@ class Creature(object):
     def die(self, msg):
         assert self.is_alive, 'DEAD creatures cannot die'
         self.state = 0
-        print '%s died: %s' % (self, msg)
+        print('%s died: %s' % (self, msg))
 
     def get_eaten(self):
         assert self.is_dead, 'Only DEAD creatures can be eaten'
@@ -118,7 +118,7 @@ class Carnivore(Creature):
     def kill(self, creature):
         creature.die('from %s' % self)
         self.hunger += 1
-        print '%s just killed %s' % (self, creature)
+        print('%s just killed %s' % (self, creature))
 
 
 class Herbivore(Creature):
@@ -143,7 +143,7 @@ class Scavenger(Creature):
     def ate(self, creature):
         creature.get_eaten()
         self.hunger += 1
-        print '%s just ate %s' % (self, creature)
+        print('%s just ate %s' % (self, creature))
 
 
 class Cell(object):
@@ -206,7 +206,7 @@ class Terrain(object):
 
     def _deploy_creatures(self):
         for __ in range(self.rows*self.cols):
-            cell = random.choice(self.cells_map.values())
+            cell = random.choice(list(self.cells_map.values()))
             klass = random.choice([Carnivore, Herbivore, Scavenger])
             creature = klass(cell=cell, number=__)
 
@@ -247,7 +247,7 @@ class Terrain(object):
         return any(c for c in self.creatures if c.is_alive)    
 
     def tick(self):
-        print 'day %s is coming' % (self.clock+1)
+        print('day %s is coming' % (self.clock+1))
         for creature in self.creatures:
             if creature.is_alive:
                 creature.live()
@@ -263,7 +263,7 @@ class Terrain(object):
         }
 
         cells = []
-        for cell in self.cells_map.itervalues():
+        for cell in self.cells_map.values():
             cells.append({
                 '%s' % cell: cell.creatures,
             })
@@ -277,7 +277,7 @@ def main():
     while terrain.has_alive_creatures:
         pprint.pprint(terrain.status())
         terrain.tick()
-    print 'ALL DEAD'
+    print('ALL DEAD')
     pprint.pprint(terrain.status())
 
 if __name__ == "__main__":

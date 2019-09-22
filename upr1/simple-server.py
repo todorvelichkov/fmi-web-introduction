@@ -1,4 +1,5 @@
 import socket
+from urllib.parse import quote, unquote
 
 HOST = "127.0.0.1"
 PORT = 9000
@@ -54,13 +55,14 @@ with socket.socket() as server_sock:
         # Using the sendall method, let’s send the connecting client an example response:
         with client_sock:
             lines = [request_line for request_line in iter_lines(client_sock)]
-            request_path = lines[0].decode().split(' ')[1]
-
+            # Decode: From Bytes to Unicode
+            request_path = unquote(lines[0].decode().split(' ')[1])
+            response_body = '<html><body>Hello <strong>%s</strong> You are at: %s</body></html>' % (client_addr[1], request_path)
             response = '\r\n'.join([
                 'HTTP/1.1 200 OK',
-                'Content-type: text/html',
-                # 'Content-length: 15',
+                'Content-Type: text/html; charset=utf-8',
+                'Content-length: %s' % len(response_body),
                 '',
-                '<h1>Hello %s You are at %s</h1>' % (client_addr[1], request_path)
-            ])
-            client_sock.sendall(response.encode())
+                response_body
+            ]).encode() # From Unicode to Bytes
+            client_sock.sendall(response)

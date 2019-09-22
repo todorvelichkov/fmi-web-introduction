@@ -51,12 +51,12 @@ class Terrain(object):
         return any(c for c in self.creatures if c.is_alive)
 
     def render_status(self):
-        print '----------------- DAY %s -----------' % self.day
+        print('----------------- DAY %s -----------' % self.day)
         for cell in self.cells:
-            print '------------ CELL %s -----------' % cell
+            print('------------ CELL %s -----------' % cell)
             for creature in cell.creatures:
-                print '----- {}'.format(creature)
-        print '-----------------END REPORT----------------'
+                print('----- {}'.format(creature))
+        print('-----------------END REPORT----------------')
 
     def tick(self):
         self.day += 1
@@ -126,9 +126,9 @@ class Creature(object):
             self._cell.creatures.remove(self)
         self._cell = value
         self._cell.creatures.append(self)
-        print 'Creature %s is moving to: %s' % (
+        print('Creature %s is moving to: %s' % (
             self.id, self._cell
-        )
+        ))
  
     @property
     def is_hungry(self):
@@ -182,7 +182,7 @@ class Creature(object):
     def die(self, msg):
         assert self.is_alive
         self.state = 'dead'
-        print '%s died: %s' % (self, msg)
+        print('%s died: %s' % (self, msg))
 
     def get_killed(self, creature):
         self.die(msg='from %s' % creature)
@@ -190,7 +190,7 @@ class Creature(object):
     def get_eaten(self, creature):
         assert self.is_dead
         self.state = 'eaten'
-        print '%s got eaten by: %s' % (self, creature)
+        print('%s got eaten by: %s' % (self, creature))
 
 
 class Scavenger(Creature):
